@@ -1,4 +1,22 @@
 ---
+const apiKey = import.meta.env.BUILDER_API_KEY;
+
+const handleError = (err) => {
+  console.log(err);
+  // The requested Builder content could not be found.
+  if (err.response.status === 404) {
+    return { data: null };
+  }
+  throw err;
+};
+
+const encodedUrl = encodeURIComponent('/homepage');
+
+const { data: pageData } = await fetch(
+  `https://cdn.builder.io/api/v1/html/page?apiKey=${apiKey}&url=${encodedUrl}`
+)
+  .then((res) => res.json())
+  .catch(handleError);
 
 ---
 
@@ -10,7 +28,7 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+	<h1>Builder Trial</h1>
+	<builder-component model='page' api-key={apiKey}/>
+	<script async src='https://cdn.builder.io/js/webcomponents'></script>
 </html>

@@ -1,34 +1,32 @@
 ---
-const apiKey = import.meta.env.BUILDER_API_KEY;
 
-const handleError = (err: any) => {
-	console.log(err);
-	if(err.response.status === 404) {
-		return {data: null}
-	}
-	throw err;
-}
-const encodedUrl = encodeURIComponent("/home");
+const builderAPIpublicKey = import.meta.env.BUILDER_API_KEY;
+const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 
-const qwikPageData = await fetch(
-	`https://cdn.builder.io/api/v1/html/page?apiKey=${apiKey}&url=${encodedUrl}`
+const { results: posts } = await fetch(
+  `https://cdn.builder.io/api/v3/content/${builderModel}?${new URLSearchParams({
+    apiKey: builderAPIpublicKey,
+    fields: ["data.slug", "data.title"].join(","),
+    cachebust: "true",
+  }).toString()}`
 )
-.then((res) => res.json())
-.catch(handleError);
-
-console.log(qwikPageData)
+  .then((res) => res.json())
+  .catch();
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Home Page</h1>
-		<main set:html={qwikPageData.html}></main>
-	</body>
+  <head>
+    <title>Blog Index</title>
+  </head>
+  <body>
+    <ul>
+      {
+        posts.map(({ data: { slug, title } }) => (
+          <li>
+            <a href={`/posts/${slug}`}>{title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </body>
 </html>
