@@ -10,7 +10,9 @@ const handleError = (err) => {
   throw err;
 };
 
-const encodedUrl = encodeURIComponent('/homepage');
+// encodeURIComponent should be associated the with the routing path 
+// defined for the page model created in builder.io
+const encodedUrl = encodeURIComponent('/');
 
 const { data: pageData } = await fetch(
   `https://cdn.builder.io/api/v1/html/page?apiKey=${apiKey}&url=${encodedUrl}`
@@ -28,7 +30,5 @@ const { data: pageData } = await fetch(
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<h1>Builder Trial</h1>
-	<builder-component model='page' api-key={apiKey}/>
-	<script async src='https://cdn.builder.io/js/webcomponents'></script>
+	<main set:html={pageData.html}></main>
 </html>
