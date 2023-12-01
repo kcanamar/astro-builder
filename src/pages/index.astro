@@ -1,4 +1,6 @@
 ---
+// Qwik Component
+import { Counter } from "../components/qwik/counter.tsx";
 const apiKey = import.meta.env.BUILDER_API_KEY;
 
 const handleError = (err) => {
@@ -30,5 +32,8 @@ const { data: pageData } = await fetch(
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
 	</head>
-	<main set:html={pageData.html}></main>
+	<body>
+    <Counter word="most excellent"/> 
+    <main set:html={pageData.html}></main>
+  </body>
 </html>
